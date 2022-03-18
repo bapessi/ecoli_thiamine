@@ -3,8 +3,8 @@
 import pandas as pd
 import numpy as np
 
-data = pd.read_excel('ecoli_core_model.xls',sheet_name='Ecoli_core_S',index_col=0)
-data_metabolites = pd.read_excel('ecoli_core_model.xls',sheet_name='metabolites',index_col=0)
+data = pd.read_excel('ecoli_core_model.xlsx',sheet_name='Ecoli_core_S',index_col=0)
+data_metabolites = pd.read_excel('ecoli_core_model.xlsx',sheet_name='metabolites',index_col=0)
 
 
 
