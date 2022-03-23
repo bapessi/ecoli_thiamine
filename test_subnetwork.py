@@ -1,34 +1,33 @@
 import numpy as np 
 import pandas as pd
 import dependency
-
-m_A = ['pyr','glc-D[e]','lac-D[e]']
-m_ignore = ["coa",'adp','atp','h2o','h2o[e]',"h",'h[e]','nad','nadh','nadp','nadph']
+# This is a modification
+m_A = pd.Series(['glc-D[e]','lac-D[e]'])
+m_ignore = pd.Series(["coa",'adp','atp','h2o','h2o[e]',"h",'h[e]','nad','nadh','nadp','nadph','co2'])
 
 def get_reactions(m,df):
     reactions = df.loc[m].loc[df.loc[m]!=0]
-    return list(reactions.index.values)
+    return pd.Series(reactions.index.values)
 
 def get_metabolites(r,df):
     metabolites = df[r].loc[df[r]!=0].index.values
-    return list(metabolites)
+    return pd.Series(metabolites)
 
-def remove_checked(new,checked,ignore=[],m_A=[]):
-
+def remove_checked(new,checked,actual,ignore=[],m_A=[]):
+    print('antes ', new)
     remove = list(set(new)&set(checked))
     for r in remove:
         new.remove(r)
     for n in new:
-        if n in ignore or n in m_A:
+        if n in ignore or n in m_A or n in actual:
             new.remove(n)
+    print('depois ', new)
     return new
 
 def initiate_chain(m_init,df):
-    r_init = []
-    r = get_reactions(m_init,df)
-    r_init = r_init + list(r)
-    print(r_init)
+    r_init = get_reactions(m_init,df)
     return r_init
+
 def get_reaction_chain(r_unchecked,df):
     m_unchecked = []
     m_checked = []
@@ -36,21 +35,17 @@ def get_reaction_chain(r_unchecked,df):
     while r_unchecked:
         for r in r_unchecked:
             m_new = get_metabolites(r,df)
-            m_new = remove_checked(m_new,m_checked,m_ignore)
-            m_unchecked = m_unchecked + m_new
+            m_unchecked = m_unchecked + remove_checked(m_new.copy(),m_checked.copy(),m_unchecked.copy(),m_ignore.copy(),m_A.copy())
             r_checked.append(r)
-            print(r)
 
         r_unchecked = []
         for m in m_unchecked:
             r_new = get_reactions(m,df) 
-            r_new = remove_checked(r_new,r_checked)
-            r_unchecked = r_unchecked + r_new
+            r_unchecked = r_unchecked + remove_checked(r_new.copy(),r_checked.copy(),r_unchecked.copy())
             m_checked.append(m)
-            m_unchecked.remove(m)
         m_unchecked = []
 
-    return r_checked
+    return r_checked,m_checked
 
 if __name__ == '__main__':
 
@@ -60,6 +55,9 @@ if __name__ == '__main__':
 
     m_init = 'pyr'
     r_init = initiate_chain(m_init,df)
-    r_chain = get_reaction_chain(r_init,df)
+    print('n of r init: ', len(r_init))
+    r_chain,m_checked = get_reaction_chain(r_init,df)
     print(r_chain)
     print("n of reactions: ",len(r_chain))
+    print(len(set(r_chain)))
+
