@@ -26,6 +26,7 @@ def get_bounds(rev):
     return bounds
 
 def correct_feed(feed_list,bounds,c,r_max):
+    feed_list = []
     for reaction,i in zip(df.columns,range(len(df.columns))):
         if reaction in feed_list:
             print(reaction)
@@ -35,9 +36,8 @@ def correct_feed(feed_list,bounds,c,r_max):
             c[i] = -1
     return bounds,c
 
-def feed_excel():
-    filename = 'data/feed_list.xlsx'
-    feed_list = pd.read_excel(filename).to_numpy()
+def feed_excel(filename = 'data/feed_list.xlsx'):
+    feed_list = pd.read_excel(filename,header=None).to_numpy()
     feed_list=feed_list.flatten()
     return feed_list
 
