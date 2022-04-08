@@ -1,4 +1,3 @@
-
 import numpy as np 
 import pandas as pd
 import reaction_direction as rd
@@ -19,13 +18,10 @@ def get_metabolites_in(df):
     # met_loop = ['coa','nad','nadp','adp','q8','h2o','h','atp','nadh','nadph','co2','pep']
     met_loop = ['coa','nad','nadp','adp','q8','pep']
     m_in = fb.feed_excel(filename='data/feed_list_metabolites.xlsx').tolist()
-    print(m_in)
     for m in df.index:
         if m in met_loop or m in m_in:
             metabolites_in.append(m)
-    print(metabolites_in)
     return metabolites_in
-
 
 def init_positions(dict,df):
 

@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import dependency
 # This is a modification
+
 def get_reactions(m,df):
     reactions = df.loc[m].loc[df.loc[m]!=0]
     return pd.Series(reactions.index.values)
@@ -45,11 +46,10 @@ if __name__ == '__main__':
     m_A = pd.Series(['pyr','glc-D[e]','lac-D[e]','gln-L','glu-L','oaa'])
     m_ignore = pd.Series(["coa",'adp','atp','h2o','h2o[e]',"h",'h[e]','nad','nadh','nadp','nadph','co2'])
 
-
     print('START')
     file_input = 'ecoli_core_model.xlsx'
-    df,metabolites,dict,rev = dependency.init_dataset(file_input)
-
+    # df,metabolites,dict,rev = dependency.init_dataset(file_input)
+    df,rev = dependency.init_dataset(file_input)
     m_init = 'pyr'
     r_init = initiate_chain(m_init,df)
     r_chain,m_checked = get_reaction_chain(r_init,df)

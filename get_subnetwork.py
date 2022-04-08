@@ -1,7 +1,8 @@
-from chempy import Substance
+# from chempy import Substance
 import numpy as np
 import efmtool
 import pandas as pd
+
 '''
 Treat the core metabolism of e coli and returns a subnetwork according to the list on the spreadsheet reactions
 '''
